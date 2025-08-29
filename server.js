@@ -4,40 +4,34 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// User information (replace with your actual details)
+// -- User Information --
+// Replace with your actual details before submission
 const USER_INFO = {
     user_id: "tanay_upadhyay_16022003", // Format: fullname_ddmmyyyy    
     email: "tanay.upadhyay2022@vitstudent.ac.in",
     roll_number: "22BEC0804"
 };
 
-// Helper function to check if a string is a number
+
 function isNumber(str) {
     return !isNaN(str) && !isNaN(parseFloat(str)) && isFinite(str);
 }
 
-// Helper function to check if a string contains only alphabets
 function isAlphabet(str) {
     return /^[a-zA-Z]+$/.test(str);
 }
 
-// Helper function to check if a string contains special characters
 function isSpecialCharacter(str) {
     return /^[^a-zA-Z0-9]+$/.test(str);
 }
 
-// Helper function to create alternating caps concatenation
 function createAlternatingCaps(alphabets) {
-    // Extract all alphabetical characters from the original input order
     let allChars = [];
     
-    // Process each alphabet item to get all characters
     alphabets.forEach(item => {
-        // Convert back to original form to extract individual characters
         for (let char of item) {
             if (/[a-zA-Z]/.test(char)) {
                 allChars.push(char.toLowerCase());
@@ -45,10 +39,9 @@ function createAlternatingCaps(alphabets) {
         }
     });
     
-    // Reverse the array
     allChars.reverse();
     
-    // Apply alternating caps (start with uppercase for index 0)
+    // Start with uppercase, then alternate
     let result = '';
     for (let i = 0; i < allChars.length; i++) {
         if (i % 2 === 0) {
@@ -61,7 +54,7 @@ function createAlternatingCaps(alphabets) {
     return result;
 }
 
-// Main processing function
+// Main data processing logic
 function processArray(data) {
     const result = {
         is_success: true,
@@ -77,7 +70,7 @@ function processArray(data) {
     };
 
     let numberSum = 0;
-    let originalAlphabets = []; // Keep track of original alphabets for concatenation
+    let originalAlphabets = []; // Preserve original strings for concatenation logic
 
     try {
         data.forEach(item => {
@@ -94,7 +87,7 @@ function processArray(data) {
                 }
             } else if (isAlphabet(strItem)) {
                 result.alphabets.push(strItem.toUpperCase());
-                originalAlphabets.push(strItem); // Keep original for concatenation
+                originalAlphabets.push(strItem);
             } else if (isSpecialCharacter(strItem)) {
                 result.special_characters.push(strItem);
             }
@@ -112,12 +105,11 @@ function processArray(data) {
     return result;
 }
 
-// POST /bfhl endpoint
+// API endpoint for processing the array
 app.post('/bfhl', (req, res) => {
     try {
         const { data } = req.body;
 
-        // Validate input
         if (!data || !Array.isArray(data)) {
             return res.status(400).json({
                 is_success: false,
@@ -125,10 +117,7 @@ app.post('/bfhl', (req, res) => {
             });
         }
 
-        // Process the array
         const result = processArray(data);
-
-        // Return response with 200 status code
         res.status(200).json(result);
 
     } catch (error) {
@@ -140,7 +129,7 @@ app.post('/bfhl', (req, res) => {
     }
 });
 
-// GET endpoint for basic health check
+// Health check endpoint
 app.get('/bfhl', (req, res) => {
     res.status(200).json({
         operation_code: 1
@@ -158,7 +147,6 @@ app.get('/', (req, res) => {
     });
 });
 
-// Start server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`POST endpoint: http://localhost:${PORT}/bfhl`);
