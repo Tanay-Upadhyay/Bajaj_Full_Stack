@@ -101,6 +101,7 @@ function processArray(data) {
         });
 
         result.sum = String(numberSum);
+        // console.log("Final payload:", result);
         result.concat_string = createAlternatingCaps(originalAlphabets);
 
     } catch (error) {
