@@ -8,7 +8,6 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
 // -- User Information --
-// Replace with your actual details before submission
 const USER_INFO = {
     user_id: "tanay_upadhyay_16022003", // Format: fullname_ddmmyyyy    
     email: "tanay.upadhyay2022@vitstudent.ac.in",
